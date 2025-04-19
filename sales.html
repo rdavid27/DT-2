@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Management - Restaurant Manager</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">Restaurant Manager</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="ingredients.html">Ingredients</a>
+            <a href="menu.html">Menu Items</a>
+            <a href="sales.html" class="active">Sales</a>
+            <a href="recipe_recommendation.html">Recipe Assistant</a>
+            <a href="foodbanks.html">Food Banks</a>
+            <button class="logout-btn">Logout</button>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <div class="header">
+                <h1>Sales Management</h1>
+                <p>Monitor and manage your sales records to optimize your business performance</p>
+                <button class="add-new-btn" id="addSaleBtn">
+                    <i class="fas fa-plus"></i> Add New Sale
+                </button>
+            </div>
+        </section>
+
+        <!-- Sales Summary Cards -->
+        <section class="sales-summary">
+            <div class="summary-card">
+                <h3>Today's Sales</h3>
+                <div class="value" id="todaySales">$0.00</div>
+                <div class="sub-value" id="todayOrders">0 orders</div>
+            </div>
+            <div class="summary-card">
+                <h3>This Week's Sales</h3>
+                <div class="value" id="weekSales">$0.00</div>
+                <div class="sub-value" id="weekOrders">0 orders</div>
+            </div>
+            <div class="summary-card">
+                <h3>This Month's Sales</h3>
+                <div class="value" id="monthSales">$0.00</div>
+                <div class="sub-value" id="monthOrders">0 orders</div>
+            </div>
+        </section>
+
+        <!-- Charts Section -->
+        <section class="charts-section">
+            <div class="chart-container">
+                <h3>Sales Trend (Last 7 Days)</h3>
+                <canvas id="salesTrendChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>Sales by Category</h3>
+                <canvas id="categoryDistributionChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>Top 5 Selling Items</h3>
+                <canvas id="topItemsChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Recent Orders and Top Items Grid -->
+        <section class="recent-orders">
+            <h3>Recent Orders</h3>
+            <div id="recentOrders">
+                <!-- Recent orders will be dynamically populated here -->
+            </div>
+        </section>
+
+        <section class="top-items">
+            <h3>Top Selling Items</h3>
+            <div id="topItems">
+                <!-- Top items will be dynamically populated here -->
+            </div>
+        </section>
+
+        <!-- Sales Table Section -->
+        <section class="sales-table-container">
+            <h2>Monthly Sales Breakdown</h2>
+            <table class="sales-table">
+                <thead>
+                    <tr>
+                        <th>Menu Item</th>
+                        <th>Total Quantity Sold</th>
+                        <th>Total Revenue</th>
+                        <th>Average Price</th>
+                    </tr>
+                </thead>
+                <tbody id="salesTableBody">
+                    <!-- Sales records will be dynamically populated here -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <!-- Modal for Adding/Editing Sales -->
+    <div class="modal" id="saleModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Sale</h2>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="saleForm">
+                    <div class="form-group">
+                        <label for="menuItem">Menu Item</label>
+                        <select id="menuItem" required>
+                            <option value="">Select a menu item</option>
+                            <!-- Menu items will be dynamically populated here -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity">Quantity Sold</label>
+                        <input type="number" id="quantity" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Date of Sale</label>
+                        <input type="datetime-local" id="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Total Price</label>
+                        <div class="price-preview">
+                            <span id="pricePreview">$0.00</span>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="cancel-btn" id="cancelBtn">Cancel</button>
+                        <button type="submit" class="save-btn">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Confirm Deletion</h2>
+                <button class="close-btn" id="closeConfirmModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this sales record?</p>
+            </div>
+            <div class="form-actions">
+                <button class="cancel-btn" id="cancelDeleteBtn">Cancel</button>
+                <button class="delete-btn" id="confirmDeleteBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="auth.js"></script>
+    <script src="app.js"></script>
+    <script src="sales.js"></script>
+</body>
+</html> 

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Recommendations - Restaurant Manager</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .recipe-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .recipe-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .recipe-details {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .recipe-ingredients ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .recipe-ingredients li {
+            margin-bottom: 5px;
+        }
+
+        .recipe-instructions {
+            margin-top: 15px;
+        }
+
+        .no-recipes {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">Restaurant Manager</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="ingredients.html">Ingredients</a>
+            <a href="menu.html">Menu Items</a>
+            <a href="sales.html">Sales</a>
+            <a href="recipe_recommendation.html" class="active">Recipe Assistant</a>
+            <a href="foodbanks.html">Food Banks</a>
+            <button class="logout-btn">Logout</button>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <h1>Recipe Recommendations</h1>
+            <p>Discover dishes you can prepare with your available ingredients</p>
+        </section>
+
+        <div class="recipe-recommendation-container">
+            <!-- Ingredient Selection Panel -->
+            <div class="ingredient-selection-panel">
+                <div class="panel-header">
+                    <h2>Available Ingredients</h2>
+                    <div class="selected-count">
+                        <span id="selectedCount">0</span> ingredients selected
+                    </div>
+                </div>
+                <div class="ingredients-list" id="ingredientsList">
+                    <!-- Ingredients will be dynamically populated here -->
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="main-content">
+                <!-- AI Assistant Section -->
+                <div class="ai-assistant-section">
+                    <div class="assistant-header">
+                        <div class="assistant-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h3>AI Recipe Assistant</h3>
+                    </div>
+                    <div class="assistant-message" id="assistantMessage">
+                        Hello! I can recommend dishes based on the ingredients you have. Please select ingredients from the list!
+                    </div>
+                    <div id="recipesContainer"></div>
+                    <div class="suggested-recipes" id="assistantRecipes"></div>
+                    <div class="assistant-actions">
+                        <button class="suggest-recipe-btn" id="suggestRecipeBtn">
+                            <i class="fas fa-magic"></i>
+                            Suggest a Recipe
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Suggested Recipes Section -->
+                <div class="suggested-recipes-section">
+                    <h2>Suggested Recipes</h2>
+                    <div class="recipes-grid" id="suggestedRecipes">
+                        <!-- Recipes will be dynamically populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="index.html">Home</a>
+                <a href="ingredients.html">Ingredients</a>
+                <a href="menu.html">Menu Items</a>
+                <a href="sales.html">Sales</a>
+                <a href="recipe_recommendation.html">Recipe Assistant</a>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <p>Email: support@restaurantmanager.com</p>
+                <p>Phone: (555) 123-4567</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Restaurant Manager. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="recipe_recommendation.js"></script>
+    <script>
+        // Handle logout
+        document.querySelector('.logout-btn').addEventListener('click', () => {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('username');
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html> 
