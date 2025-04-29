@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donations - Food Bank Portal</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">Food Bank Portal</div>
+        <div class="nav-links">
+            <a href="foodbank_dashboard.html">Dashboard</a>
+            <a href="foodbank_donations.html" class="active">Donations</a>
+            <a href="foodbank_partners.html">Restaurant Partners</a>
+            <a href="foodbank_profile.html">Profile</a>
+            <button class="logout-btn">Logout</button>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <div class="header">
+                <h1>Donation Management</h1>
+                <p>View and manage all donations from restaurant partners</p>
+            </div>
+        </section>
+
+        <section class="donations-container">
+            <div class="filters-section">
+                <div class="search-box">
+                    <input type="text" id="searchDonations" placeholder="Search donations...">
+                    <button class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <div class="filter-options">
+                    <select id="statusFilter">
+                        <option value="all">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                    <select id="dateFilter">
+                        <option value="all">All Time</option>
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                    </select>
+                    <button class="export-btn">
+                        <i class="fas fa-download"></i>
+                        Export Data
+                    </button>
+                </div>
+            </div>
+
+            <div class="donations-list">
+                <table id="donationsTable">
+                    <thead>
+                        <tr>
+                            <th>Restaurant</th>
+                            <th>Items</th>
+                            <th>Quantity</th>
+                            <th>Pickup Time</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="donationsList">
+                        <!-- Donations will be dynamically populated here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                <button id="prevPage" class="pagination-btn">
+                    <i class="fas fa-chevron-left"></i>
+                    Previous
+                </button>
+                <span id="pageInfo">Page 1 of 1</span>
+                <button id="nextPage" class="pagination-btn">
+                    Next
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Donation Details Modal -->
+        <div id="donationModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2>Donation Details</h2>
+                <div id="donationDetails">
+                    <!-- Donation details will be populated here -->
+                </div>
+                <div class="modal-actions">
+                    <button id="confirmDonation" class="action-btn confirm-btn">
+                        <i class="fas fa-check"></i>
+                        Confirm Donation
+                    </button>
+                    <button id="cancelDonation" class="action-btn cancel-btn">
+                        <i class="fas fa-times"></i>
+                        Cancel Donation
+                    </button>
+                    <button id="completeDonation" class="action-btn complete-btn">
+                        <i class="fas fa-check-double"></i>
+                        Mark as Completed
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="data.js"></script>
+    <script src="foodbank_donations.js"></script>
+    <script>
+        // Handle logout
+        document.querySelector('.logout-btn').addEventListener('click', () => {
+            localStorage.removeItem('isFoodBankLoggedIn');
+            localStorage.removeItem('foodBankId');
+            localStorage.removeItem('foodBankName');
+            window.location.href = 'foodbank_login.html';
+        });
+    </script>
+</body>
+</html> 

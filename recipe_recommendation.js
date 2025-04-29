@@ -71,11 +71,23 @@ const RECIPES = [
         category: "Asian",
         prepTime: "20 mins",
         difficulty: "Easy"
+    },
+    {
+        id: 9,
+        name: "Asian Chicken Rice Bowl",
+        ingredients: ["Rice", "Lettuce", "Chicken", "Tomatoes", "Onions", "Ginger"],
+        instructions: "1. Cook rice according to package instructions\n2. Cut chicken into bite-sized pieces\n3. Finely chop onions and ginger\n4. Heat oil in a pan and sauté onions and ginger until fragrant\n5. Add chicken and cook until golden brown\n6. Slice tomatoes and chop lettuce\n7. Assemble bowl: rice at the bottom, topped with chicken, fresh tomatoes, and lettuce\n8. Season with salt and pepper to taste",
+        category: "Asian",
+        prepTime: "30 mins",
+        difficulty: "Easy"
     }
 ];
 
 // Initialize the page
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize DataStore
+    DataStore.init();
+
     const ingredientsList = document.getElementById('ingredientsList');
     const selectedCount = document.getElementById('selectedCount');
     const assistantMessage = document.getElementById('assistantMessage');
@@ -114,10 +126,14 @@ document.addEventListener('DOMContentLoaded', () => {
         return RECIPES.filter(recipe => {
             const recipeIngredients = recipe.ingredients.map(i => i.toLowerCase());
             const selected = selectedIngredients.map(i => i.toLowerCase());
+            
+            // Count how many ingredients from the recipe are in the selected ingredients
             const matchingIngredients = recipeIngredients.filter(ingredient => 
                 selected.includes(ingredient)
             );
-            return matchingIngredients.length >= (recipeIngredients.length * 0.7);
+            
+            // If we have at least 3 matching ingredients, show the recipe
+            return matchingIngredients.length >= 3;
         });
     }
 

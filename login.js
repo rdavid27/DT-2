@@ -62,8 +62,8 @@ function handleLogin(e) {
     const password = passwordInput.value.trim();
 
     try {
-        // Get users from localStorage
-        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        // Get users from localStorage or use mock users as fallback
+        const users = JSON.parse(localStorage.getItem('users') || JSON.stringify(mockUsers));
         
         // Check credentials against stored users
         const user = users.find(
@@ -74,7 +74,7 @@ function handleLogin(e) {
             // Store login state
             localStorage.setItem('isLoggedIn', 'true');
             localStorage.setItem('username', username);
-            localStorage.setItem('userRole', user.role);
+            localStorage.setItem('userRole', user.role || 'user');
             
             // Redirect to home page
             window.location.href = 'index.html';

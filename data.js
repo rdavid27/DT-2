@@ -6,6 +6,16 @@ const DATA_KEYS = {
     USER: 'user'
 };
 
+// Default ingredients
+const DEFAULT_INGREDIENTS = [
+    { id: 1, name: "Rice" },
+    { id: 2, name: "Lettuce" },
+    { id: 3, name: "Chicken" },
+    { id: 4, name: "Tomatoes" },
+    { id: 5, name: "Onions" },
+    { id: 6, name: "Ginger" }
+];
+
 // Data management functions
 const DataStore = {
     // Initialize data
@@ -14,7 +24,7 @@ const DataStore = {
             this.setData(DATA_KEYS.MENU_ITEMS, []);
         }
         if (!this.getData(DATA_KEYS.INGREDIENTS)) {
-            this.setData(DATA_KEYS.INGREDIENTS, []);
+            this.setData(DATA_KEYS.INGREDIENTS, DEFAULT_INGREDIENTS);
         }
         if (!this.getData(DATA_KEYS.SALES)) {
             this.setData(DATA_KEYS.SALES, []);
