@@ -51,7 +51,7 @@ const mockDonations = [
         items: "Buns, Patties, Vegetables",
         quantity: "30 portions",
         pickupTime: "2024-03-21 10:00",
-        status: "Completed",
+        status: "Pending",
         contact: "Mike Johnson",
         phone: "555-0126",
         address: "321 Elm St, City",
@@ -63,11 +63,11 @@ const mockDonations = [
         items: "Pizza, Breadsticks",
         quantity: "20 portions",
         pickupTime: "2024-03-21 11:30",
-        status: "Cancelled",
+        status: "Pending",
         contact: "Tom Wilson",
         phone: "555-0127",
         address: "654 Maple Dr, City",
-        notes: "Cancelled due to power outage"
+        notes: "Ready for pickup"
     }
 ];
 
@@ -113,13 +113,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${formatDateTime(donation.pickupTime)}</td>
                 <td><span class="status-badge ${donation.status.toLowerCase()}">${donation.status}</span></td>
                 <td>
-                    <button class="action-btn view-btn" data-id="${donation.id}">
-                        <i class="fas fa-eye"></i>
-                        View
-                    </button>
+                    <div class="action-buttons">
+                        <button class="action-btn view-btn" data-id="${donation.id}">
+                            <i class="fas fa-eye"></i>
+                            View
+                        </button>
+                        <button class="action-btn confirm-btn" data-id="${donation.id}">
+                            <i class="fas fa-check"></i>
+                            Confirm
+                        </button>
+                    </div>
                 </td>
             `;
             donationsList.appendChild(row);
+        });
+
+        // Add event listeners to buttons
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.addEventListener('click', () => showDonationDetails(btn.dataset.id));
+        });
+
+        document.querySelectorAll('.confirm-btn').forEach(btn => {
+            btn.addEventListener('click', () => updateDonationStatus(btn.dataset.id, 'Confirmed'));
         });
 
         // Update pagination
@@ -221,9 +236,6 @@ document.addEventListener('DOMContentLoaded', () => {
         donation.status = newStatus;
         filterDonations();
         modal.style.display = 'none';
-        
-        // Show success message
-        alert(`Donation status updated to ${newStatus}`);
     }
 
     // Export donations data

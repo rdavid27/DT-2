@@ -118,7 +118,24 @@ function formatDateTime(dateTimeStr) {
 function confirmDonation(donationId) {
     // In a real application, this would make an API call
     console.log(`Confirming donation ${donationId}`);
-    alert('Donation confirmed! The restaurant has been notified.');
+    
+    const modal = document.getElementById('successModal');
+    const closeSuccess = document.getElementById('closeSuccess');
+
+    // Show the modal
+    modal.style.display = 'block';
+
+    // Handle clicking outside the modal
+    window.onclick = (event) => {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+
+    // Handle close success button
+    closeSuccess.onclick = () => {
+        modal.style.display = 'none';
+    };
 }
 
 // Show donation details

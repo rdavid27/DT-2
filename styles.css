@@ -110,12 +110,14 @@ p {
     background-color: var(--primary-color);
     border: none;
     color: var(--darker-bg);
-    padding: 0.5rem 1.5rem;
-    border-radius: 8px;
+    padding: 0.4rem 1.2rem;
+    border-radius: 6px;
     cursor: pointer;
     font-weight: 500;
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px var(--shadow-color);
+    font-size: 0.9rem;
+    margin: 0.5rem;
 }
 
 .logout-btn:hover {
@@ -183,8 +185,8 @@ section {
 .financial-overview {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 2rem;
-    padding: 2rem;
+    gap: 4rem;
+    padding: 3rem;
     background-color: var(--darker-bg);
     border-radius: 1.5rem;
     margin-bottom: 4rem;
@@ -193,12 +195,14 @@ section {
 .card {
     background-color: var(--card-bg);
     border-radius: 1rem;
-    padding: 2rem;
+    padding: 2.5rem;
     display: flex;
     align-items: center;
     gap: 1.5rem;
     transition: all 0.3s ease;
     border: 1px solid var(--border-color);
+    min-height: 120px;
+    margin: 1.5rem 0;
 }
 
 .card:hover {
@@ -1553,14 +1557,16 @@ button {
     background-color: var(--primary-color);
     color: var(--darker-bg);
     border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
     cursor: pointer;
     font-weight: 500;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    font-size: 0.9rem;
+    margin: 0.5rem;
 }
 
 button:hover {
@@ -1618,4 +1624,213 @@ button:hover {
     th, td {
         padding: 0.75rem;
     }
+}
+
+.action-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    margin: 0.4rem;
+}
+
+.recent-donations {
+    margin: 2rem 0;
+    padding-left: 1.5rem;
+}
+
+.recent-donations h2 {
+    margin: 2.5rem 0 1rem 0;
+    color: var(--primary-color);
+}
+
+.table-container {
+    background-color: var(--darker-bg);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    overflow-x: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+#recentDonationsTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: var(--card-bg);
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+#recentDonationsTable th {
+    background-color: var(--darker-bg);
+    color: var(--primary-color);
+    font-weight: 600;
+    padding: 1.25rem 1rem;
+    text-align: left;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid var(--border-color);
+}
+
+#recentDonationsTable td {
+    padding: 1.25rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+#recentDonationsTable tr:last-child td {
+    border-bottom: none;
+}
+
+#recentDonationsTable tbody tr {
+    transition: background-color 0.3s ease;
+}
+
+#recentDonationsTable tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+#recentDonationsTable tbody tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.status-badge {
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.status-badge.pending {
+    background-color: rgba(234, 179, 8, 0.1);
+    color: #eab308;
+}
+
+.status-badge.confirmed {
+    background-color: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+}
+
+.status-badge.completed {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+}
+
+.status-badge.cancelled {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+/* Donations Table Styles */
+.donations-list {
+    margin: 2rem 0;
+    background: var(--darker-bg);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+#donationsTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--card-bg);
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+#donationsTable th {
+    background: var(--darker-bg);
+    color: var(--primary-color);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    padding: 1.25rem 1rem;
+    text-align: left;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid var(--border-color);
+}
+
+#donationsTable td {
+    padding: 1.25rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+#donationsTable tr:last-child td {
+    border-bottom: none;
+}
+
+#donationsTable tbody tr {
+    transition: background-color 0.3s ease;
+}
+
+#donationsTable tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+#donationsTable tbody tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+#donationsTable .action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+#donationsTable .action-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    margin: 0;
+    white-space: nowrap;
+}
+
+#donationsTable .view-btn {
+    background: var(--primary-color);
+    color: var(--darker-bg);
+}
+
+#donationsTable .confirm-btn {
+    background: var(--success-color);
+    color: var(--darker-bg);
+}
+
+#donationsTable .cancel-btn {
+    background: var(--error-color);
+    color: var(--darker-bg);
+}
+
+#donationsTable .complete-btn {
+    background: var(--primary-color);
+    color: var(--darker-bg);
+}
+
+/* Status Badge Styles */
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.status-badge.pending {
+    background: var(--warning-color);
+    color: var(--white);
+}
+
+.status-badge.confirmed {
+    background: var(--info-color);
+    color: var(--white);
+}
+
+.status-badge.completed {
+    background: var(--success-color);
+    color: var(--white);
+}
+
+.status-badge.cancelled {
+    background: var(--danger-color);
+    color: var(--white);
 } 

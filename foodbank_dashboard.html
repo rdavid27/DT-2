@@ -85,6 +85,50 @@
         </section>
     </main>
 
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <h2><i class="fas fa-check-circle" style="color: #22c55e;"></i> Donation Confirmed</h2>
+            <p>The restaurant has been notified of your confirmation.</p>
+            <div class="modal-actions" style="justify-content: center;">
+                <button id="closeSuccess" class="action-btn confirm-btn">
+                    <i class="fas fa-check"></i>
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Donation Details Modal -->
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <h2>Donation Details</h2>
+            <div id="donationDetailsContent">
+                <div class="detail-group">
+                    <h3>Restaurant Information</h3>
+                    <p><strong>Name:</strong> <span id="detailRestaurant"></span></p>
+                    <p><strong>Contact:</strong> <span id="detailContact"></span></p>
+                    <p><strong>Phone:</strong> <span id="detailPhone"></span></p>
+                    <p><strong>Address:</strong> <span id="detailAddress"></span></p>
+                </div>
+                <div class="detail-group">
+                    <h3>Donation Details</h3>
+                    <p><strong>Items:</strong> <span id="detailItems"></span></p>
+                    <p><strong>Quantity:</strong> <span id="detailQuantity"></span></p>
+                    <p><strong>Pickup Time:</strong> <span id="detailPickupTime"></span></p>
+                    <p><strong>Status:</strong> <span id="detailStatus"></span></p>
+                    <p><strong>Notes:</strong> <span id="detailNotes"></span></p>
+                </div>
+            </div>
+            <div class="modal-actions" style="justify-content: center;">
+                <button id="closeDetails" class="action-btn confirm-btn">
+                    <i class="fas fa-check"></i>
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="data.js"></script>
     <script src="foodbank_dashboard.js"></script>
     <script>
