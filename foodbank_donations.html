@@ -1,129 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Donations - Food Bank Portal</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Donation Requests - Food Bank Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
     <nav class="navbar">
-        <div class="nav-brand">Food Bank Portal</div>
-        <div class="nav-links">
-            <a href="foodbank_dashboard.html">Dashboard</a>
-            <a href="foodbank_donations.html" class="active">Donations</a>
-            <a href="foodbank_partners.html">Restaurant Partners</a>
-            <a href="foodbank_profile.html">Profile</a>
-            <button class="logout-btn">Logout</button>
-        </div>
+      <div class="nav-brand">Food Bank Dashboard</div>
+      <div class="nav-links">
+        <a href="foodbank_dashboard.html">Dashboard</a>
+        <a href="foodbank_donations.html" class="active">Donations</a>
+        <a href="foodbank_profile.html">Profile</a>
+        <button class="logout-btn">Logout</button>
+      </div>
     </nav>
 
     <main>
-        <section class="hero">
-            <div class="header">
-                <h1>Donation Management</h1>
-                <p>View and manage all donations from restaurant partners</p>
-            </div>
-        </section>
+      <section class="hero">
+        <h1>Donation Requests</h1>
+        <p>Manage incoming donation requests from local restaurants</p>
+      </section>
 
-        <section class="donations-container">
-            <div class="filters-section">
-                <div class="search-box">
-                    <input type="text" id="searchDonations" placeholder="Search donations...">
-                    <button class="search-btn">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
-                <div class="filter-options">
-                    <select id="statusFilter">
-                        <option value="all">All Status</option>
-                        <option value="pending">Pending</option>
-                        <option value="confirmed">Confirmed</option>
-                        <option value="completed">Completed</option>
-                        <option value="cancelled">Cancelled</option>
-                    </select>
-                    <select id="dateFilter">
-                        <option value="all">All Time</option>
-                        <option value="today">Today</option>
-                        <option value="week">This Week</option>
-                        <option value="month">This Month</option>
-                    </select>
-                    <button class="export-btn">
-                        <i class="fas fa-download"></i>
-                        Export Data
-                    </button>
-                </div>
-            </div>
-
-            <div class="donations-list">
-                <table id="donationsTable">
-                    <thead>
-                        <tr>
-                            <th>Restaurant</th>
-                            <th>Items</th>
-                            <th>Quantity</th>
-                            <th>Pickup Time</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="donationsList">
-                        <!-- Donations will be dynamically populated here -->
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="pagination">
-                <button id="prevPage" class="pagination-btn">
-                    <i class="fas fa-chevron-left"></i>
-                    Previous
-                </button>
-                <span id="pageInfo">Page 1 of 1</span>
-                <button id="nextPage" class="pagination-btn">
-                    Next
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
-        </section>
-
-        <!-- Donation Details Modal -->
-        <div id="donationModal" class="modal">
-            <div class="modal-content">
-                <span class="close-modal">&times;</span>
-                <h2>Donation Details</h2>
-                <div id="donationDetails">
-                    <!-- Donation details will be populated here -->
-                </div>
-                <div class="modal-actions">
-                    <button id="confirmDonation" class="action-btn confirm-btn">
-                        <i class="fas fa-check"></i>
-                        Confirm Donation
-                    </button>
-                    <button id="cancelDonation" class="action-btn cancel-btn">
-                        <i class="fas fa-times"></i>
-                        Cancel Donation
-                    </button>
-                    <button id="completeDonation" class="action-btn complete-btn">
-                        <i class="fas fa-check-double"></i>
-                        Mark as Completed
-                    </button>
-                </div>
-            </div>
+      <div class="donations-container">
+        <div class="filters">
+          <div class="search-container">
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search donations..."
+              class="search-input"
+            />
+          </div>
+          <div class="status-filters">
+            <button class="filter-btn active" data-status="all">All</button>
+            <button class="filter-btn" data-status="pending">Pending</button>
+            <button class="filter-btn" data-status="accepted">Accepted</button>
+            <button class="filter-btn" data-status="rejected">Rejected</button>
+          </div>
         </div>
+
+        <div id="donationRequests" class="donation-requests">
+          <!-- Donation requests will be dynamically populated here -->
+        </div>
+      </div>
     </main>
+
+    <footer>
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <a href="foodbank_dashboard.html">Dashboard</a>
+          <a href="foodbank_donations.html">Donations</a>
+          <a href="foodbank_profile.html">Profile</a>
+        </div>
+        <div class="footer-section">
+          <h4>Contact</h4>
+          <p>Email: support@foodbank.org</p>
+          <p>Phone: (555) 123-4567</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 Food Bank Management System. All rights reserved.</p>
+      </div>
+    </footer>
 
     <script src="data.js"></script>
     <script src="foodbank_donations.js"></script>
     <script>
-        // Handle logout
-        document.querySelector('.logout-btn').addEventListener('click', () => {
-            localStorage.removeItem('isFoodBankLoggedIn');
-            localStorage.removeItem('foodBankId');
-            localStorage.removeItem('foodBankName');
-            window.location.href = 'foodbank_login.html';
+      // Handle logout
+      document.querySelector(".logout-btn").addEventListener("click", () => {
+        localStorage.removeItem("isFoodBankLoggedIn");
+        localStorage.removeItem("foodBankId");
+        window.location.href = "foodbank_login.html";
+      });
+
+      // Handle status filters
+      document.querySelectorAll(".filter-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          // Update active button
+          document
+            .querySelectorAll(".filter-btn")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          // Filter donations
+          const status = btn.dataset.status;
+          const requests = document.querySelectorAll(".donation-request-card");
+          requests.forEach((request) => {
+            if (
+              status === "all" ||
+              request.querySelector(".status-badge").classList.contains(status)
+            ) {
+              request.style.display = "block";
+            } else {
+              request.style.display = "none";
+            }
+          });
         });
+      });
+
+      // Handle search
+      document.getElementById("searchInput").addEventListener("input", (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        const requests = document.querySelectorAll(".donation-request-card");
+        requests.forEach((request) => {
+          const text = request.textContent.toLowerCase();
+          request.style.display = text.includes(searchTerm) ? "block" : "none";
+        });
+      });
     </script>
-</body>
-</html> 
+  </body>
+</html>
