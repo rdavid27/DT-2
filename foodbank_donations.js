@@ -7,483 +7,560 @@ function checkAuth() {
   return true;
 }
 
-// Mock data for testing
-const mockDonations = [
-  {
-    id: 1,
-    restaurant: "Italian Restaurant",
-    items: "Pasta, Bread, Salad",
-    quantity: "15 portions",
-    pickupTime: "2024-03-20 14:00",
-    status: "Pending",
-    contact: "John Smith",
-    phone: "555-0123",
-    address: "123 Main St, City",
-    notes: "Please bring containers for the pasta",
-  },
-  {
-    id: 2,
-    restaurant: "Asian Fusion",
-    items: "Rice, Vegetables",
-    quantity: "20 portions",
-    pickupTime: "2024-03-20 15:30",
-    status: "Confirmed",
-    contact: "Sarah Lee",
-    phone: "555-0124",
-    address: "456 Oak Ave, City",
-    notes: "Vegetables are pre-cut",
-  },
-  {
-    id: 3,
-    restaurant: "Mexican Grill",
-    items: "Beans, Rice, Tortillas",
-    quantity: "25 portions",
-    pickupTime: "2024-03-20 16:00",
-    status: "Pending",
-    contact: "Maria Garcia",
-    phone: "555-0125",
-    address: "789 Pine St, City",
-    notes: "All items are vegetarian",
-  },
-  {
-    id: 4,
-    restaurant: "Burger Joint",
-    items: "Buns, Patties, Vegetables",
-    quantity: "30 portions",
-    pickupTime: "2024-03-21 10:00",
-    status: "Pending",
-    contact: "Mike Johnson",
-    phone: "555-0126",
-    address: "321 Elm St, City",
-    notes: "Patties are frozen",
-  },
-  {
-    id: 5,
-    restaurant: "Pizza Place",
-    items: "Pizza, Breadsticks",
-    quantity: "20 portions",
-    pickupTime: "2024-03-21 11:30",
-    status: "Pending",
-    contact: "Tom Wilson",
-    phone: "555-0127",
-    address: "654 Maple Dr, City",
-    notes: "Ready for pickup",
-  },
-];
-
-// Store donation requests
-let donationRequests = [];
-
 // Initialize the page
 document.addEventListener("DOMContentLoaded", () => {
   if (!checkAuth()) return;
 
-  // Get DOM elements
-  const donationsList = document.getElementById("donationsList");
-  const searchInput = document.getElementById("searchDonations");
-  const statusFilter = document.getElementById("statusFilter");
-  const dateFilter = document.getElementById("dateFilter");
-  const exportBtn = document.querySelector(".export-btn");
-  const prevPageBtn = document.getElementById("prevPage");
-  const nextPageBtn = document.getElementById("nextPage");
-  const pageInfo = document.getElementById("pageInfo");
-  const modal = document.getElementById("donationModal");
-  const closeModal = document.querySelector(".close-modal");
-  const donationDetails = document.getElementById("donationDetails");
-  const confirmDonationBtn = document.getElementById("confirmDonation");
-  const cancelDonationBtn = document.getElementById("cancelDonation");
-  const completeDonationBtn = document.getElementById("completeDonation");
-
-  // Pagination variables
-  let currentPage = 1;
-  const itemsPerPage = 10;
-  let filteredDonations = [...mockDonations];
-
-  // Populate donations table
-  function populateDonations(donations) {
-    donationsList.innerHTML = "";
-
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const paginatedDonations = donations.slice(startIndex, endIndex);
-
-    paginatedDonations.forEach((donation) => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-                <td>${donation.restaurant}</td>
-                <td>${donation.items}</td>
-                <td>${donation.quantity}</td>
-                <td>${formatDateTime(donation.pickupTime)}</td>
-                <td><span class="status-badge ${donation.status.toLowerCase()}">${
-        donation.status
-      }</span></td>
-                <td>
-                    <div class="action-buttons">
-                        <button class="action-btn view-btn" data-id="${
-                          donation.id
-                        }">
-                            <i class="fas fa-eye"></i>
-                            View
-                        </button>
-                        <button class="action-btn confirm-btn" data-id="${
-                          donation.id
-                        }">
-                            <i class="fas fa-check"></i>
-                            Confirm
-                        </button>
-                    </div>
-                </td>
-            `;
-      donationsList.appendChild(row);
-    });
-
-    // Add event listeners to buttons
-    document.querySelectorAll(".view-btn").forEach((btn) => {
-      btn.addEventListener("click", () => showDonationDetails(btn.dataset.id));
-    });
-
-    document.querySelectorAll(".confirm-btn").forEach((btn) => {
-      btn.addEventListener("click", () =>
-        updateDonationStatus(btn.dataset.id, "Confirmed")
-      );
-    });
-
-    // Update pagination
-    updatePagination(donations.length);
-  }
-
-  // Update pagination controls
-  function updatePagination(totalItems) {
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
-    pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
-
-    prevPageBtn.disabled = currentPage === 1;
-    nextPageBtn.disabled = currentPage === totalPages;
-  }
-
-  // Filter donations
-  function filterDonations() {
-    const searchTerm = searchInput.value.toLowerCase();
-    const statusValue = statusFilter.value;
-    const dateValue = dateFilter.value;
-
-    filteredDonations = mockDonations.filter((donation) => {
-      const matchesSearch =
-        donation.restaurant.toLowerCase().includes(searchTerm) ||
-        donation.items.toLowerCase().includes(searchTerm);
-
-      const matchesStatus =
-        statusValue === "all" || donation.status.toLowerCase() === statusValue;
-
-      const matchesDate = filterByDate(donation.pickupTime, dateValue);
-
-      return matchesSearch && matchesStatus && matchesDate;
-    });
-
-    currentPage = 1;
-    populateDonations(filteredDonations);
-  }
-
-  // Filter by date
-  function filterByDate(dateStr, filterValue) {
-    if (filterValue === "all") return true;
-
-    const date = new Date(dateStr);
-    const now = new Date();
-
-    switch (filterValue) {
-      case "today":
-        return date.toDateString() === now.toDateString();
-      case "week":
-        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-        return date >= weekAgo && date <= now;
-      case "month":
-        const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-        return date >= monthAgo && date <= now;
-      default:
-        return true;
-    }
-  }
-
-  // Show donation details
-  function showDonationDetails(donationId) {
-    const donation = mockDonations.find((d) => d.id === parseInt(donationId));
-    if (!donation) return;
-
-    donationDetails.innerHTML = `
-            <div class="detail-group">
-                <h3>Restaurant Information</h3>
-                <p><strong>Name:</strong> ${donation.restaurant}</p>
-                <p><strong>Contact:</strong> ${donation.contact}</p>
-                <p><strong>Phone:</strong> ${donation.phone}</p>
-                <p><strong>Address:</strong> ${donation.address}</p>
-            </div>
-            <div class="detail-group">
-                <h3>Donation Details</h3>
-                <p><strong>Items:</strong> ${donation.items}</p>
-                <p><strong>Quantity:</strong> ${donation.quantity}</p>
-                <p><strong>Pickup Time:</strong> ${formatDateTime(
-                  donation.pickupTime
-                )}</p>
-                <p><strong>Status:</strong> <span class="status-badge ${donation.status.toLowerCase()}">${
-      donation.status
-    }</span></p>
-                <p><strong>Notes:</strong> ${donation.notes}</p>
-            </div>
-        `;
-
-    // Show/hide action buttons based on status
-    confirmDonationBtn.style.display =
-      donation.status === "Pending" ? "block" : "none";
-    cancelDonationBtn.style.display = ["Pending", "Confirmed"].includes(
-      donation.status
-    )
-      ? "block"
-      : "none";
-    completeDonationBtn.style.display =
-      donation.status === "Confirmed" ? "block" : "none";
-
-    // Set up action buttons
-    confirmDonationBtn.onclick = () =>
-      updateDonationStatus(donationId, "Confirmed");
-    cancelDonationBtn.onclick = () =>
-      updateDonationStatus(donationId, "Cancelled");
-    completeDonationBtn.onclick = () =>
-      updateDonationStatus(donationId, "Completed");
-
-    modal.style.display = "block";
-  }
-
-  // Update donation status
-  function updateDonationStatus(donationId, newStatus) {
-    const donation = mockDonations.find((d) => d.id === parseInt(donationId));
-    if (!donation) return;
-
-    donation.status = newStatus;
-    filterDonations();
-    modal.style.display = "none";
-  }
-
-  // Export donations data
-  function exportDonations() {
-    const csvContent = [
-      [
-        "Restaurant",
-        "Items",
-        "Quantity",
-        "Pickup Time",
-        "Status",
-        "Contact",
-        "Phone",
-        "Address",
-        "Notes",
-      ],
-      ...filteredDonations.map((d) => [
-        d.restaurant,
-        d.items,
-        d.quantity,
-        d.pickupTime,
-        d.status,
-        d.contact,
-        d.phone,
-        d.address,
-        d.notes,
-      ]),
-    ]
-      .map((row) => row.join(","))
-      .join("\n");
-
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = `donations_${new Date().toISOString().split("T")[0]}.csv`;
-    link.click();
-  }
-
-  // Format date and time
-  function formatDateTime(dateTimeStr) {
-    const date = new Date(dateTimeStr);
-    return date.toLocaleString("en-US", {
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  }
-
-  // Event listeners
-  searchInput.addEventListener("input", filterDonations);
-  statusFilter.addEventListener("change", filterDonations);
-  dateFilter.addEventListener("change", filterDonations);
-  exportBtn.addEventListener("click", exportDonations);
-
-  prevPageBtn.addEventListener("click", () => {
-    if (currentPage > 1) {
-      currentPage--;
-      populateDonations(filteredDonations);
-    }
+  // Set up logout button
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+    localStorage.removeItem("isFoodBankLoggedIn");
+    localStorage.removeItem("foodBankId");
+    localStorage.removeItem("foodBankName");
+    window.location.href = "foodbank_login.html";
   });
 
-  nextPageBtn.addEventListener("click", () => {
-    const totalPages = Math.ceil(filteredDonations.length / itemsPerPage);
-    if (currentPage < totalPages) {
-      currentPage++;
-      populateDonations(filteredDonations);
-    }
-  });
+  const requestsContainer = document.getElementById("donationRequests");
+  const searchInput = document.getElementById("searchInput");
+  const statusBtns = document.querySelectorAll(".filter-btn");
 
-  // Modal event listeners
-  closeModal.addEventListener("click", () => {
-    modal.style.display = "none";
-  });
-
-  window.addEventListener("click", (e) => {
-    if (e.target === modal) {
-      modal.style.display = "none";
-    }
-  });
-
-  // View button click handler
-  donationsList.addEventListener("click", (e) => {
-    const viewBtn = e.target.closest(".view-btn");
-    if (viewBtn) {
-      showDonationDetails(viewBtn.dataset.id);
-    }
-  });
-
-  // Load and display donation requests
+  // Load from localStorage
   loadDonationRequests();
+
+  // Handle status filter
+  statusBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      statusBtns.forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      displayDonationRequests();
+    });
+  });
+
+  // Handle search
+  searchInput.addEventListener("input", () => {
+    displayDonationRequests();
+  });
+
+  // Expose handler globally for inline onclick
+  window.handleDonationRequest = function (requestId, action) {
+    const requests = JSON.parse(
+      localStorage.getItem("donationRequests") || "[]"
+    );
+    const requestIndex = requests.findIndex((r) => r.id === requestId);
+
+    if (requestIndex === -1) return;
+
+    // Show loading animation
+    const loadingOverlay = document.createElement("div");
+    loadingOverlay.className = "loading-overlay";
+    loadingOverlay.style.display = "flex";
+    loadingOverlay.innerHTML = `
+      <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <h2>Processing Request</h2>
+        <p>Please wait while we update the donation status...</p>
+      </div>
+    `;
+    document.body.appendChild(loadingOverlay);
+
+    setTimeout(() => {
+      loadingOverlay.remove();
+
+      // Update the request status
+      requests[requestIndex].status = action;
+      localStorage.setItem("donationRequests", JSON.stringify(requests));
+
+      // Show confirmation modal
+      const confirmationModal = document.createElement("div");
+      confirmationModal.className = "confirmation-modal";
+      confirmationModal.style.display = "flex";
+
+      // Different message based on action
+      let actionMessage = "";
+      let iconClass = "";
+
+      switch (action) {
+        case "accepted":
+          actionMessage =
+            "The restaurant has been notified of your confirmation.";
+          iconClass = "fas fa-check-circle";
+          break;
+        case "rejected":
+          actionMessage = "The donation request has been rejected.";
+          iconClass = "fas fa-times-circle";
+          break;
+        case "completed":
+          actionMessage = "The donation has been marked as completed.";
+          iconClass = "fas fa-check-double";
+          break;
+      }
+
+      confirmationModal.innerHTML = `
+        <div class="modal-content">
+          <h2><i class="${iconClass}" style="color: ${
+        action === "rejected" ? "#f87171" : "#34d399"
+      }"></i> Request ${capitalizeFirstLetter(action)}</h2>
+          <p>${actionMessage}</p>
+          ${
+            action === "accepted"
+              ? `<p>Estimated Pickup Time: ${formatDateTime(
+                  requests[requestIndex].pickupTime
+                )}</p>`
+              : ""
+          }
+          <button class="close-btn" id="closeConfirmation">
+            <i class="fas fa-check"></i> Close
+          </button>
+        </div>
+      `;
+
+      document.body.appendChild(confirmationModal);
+
+      // Handle close button
+      document
+        .getElementById("closeConfirmation")
+        .addEventListener("click", () => {
+          confirmationModal.remove();
+          displayDonationRequests();
+        });
+    }, 1000);
+  };
+
+  // Poll for real-time updates every 5 seconds
+  setInterval(loadDonationRequests, 5000);
 });
 
-// Load and display donation requests
+// Load donation requests from localStorage
 function loadDonationRequests() {
-  const requestsContainer = document.getElementById("donationRequests");
-  if (!requestsContainer) return;
+  // Retrieve from localStorage or initialize empty array
+  let donationRequests = JSON.parse(
+    localStorage.getItem("donationRequests") || "[]"
+  );
 
-  // In a real application, this would fetch from an API
-  // For now, we'll use sample data
-  donationRequests = [
-    {
-      id: 1,
-      restaurantName: "Sample Restaurant",
-      items: [
-        { name: "Bread", quantity: 20 },
-        { name: "Vegetables", quantity: 15 },
-      ],
-      pickupTime: new Date(Date.now() + 3600000), // 1 hour from now
-      status: "pending",
-      specialInstructions: "Please bring containers for vegetables",
-    },
-  ];
+  // If no requests exist, add some sample data
+  if (donationRequests.length === 0) {
+    // Get the mock data from foodbank_dashboard.js
+    const mockDonations = [
+      {
+        id: 1,
+        restaurant: "Italian Restaurant",
+        items: [
+          { name: "Pasta", quantity: 10 },
+          { name: "Bread", quantity: 15 },
+          { name: "Salad", quantity: 15 },
+        ],
+        pickupTime: "2024-03-20 14:00",
+        status: "pending",
+        restaurantName: "Italian Restaurant",
+        contact: "Mario Rossi",
+        phone: "(555) 123-4567",
+        address: "123 Pasta Lane, Cityville",
+        specialInstructions: "Please use the back entrance for pickup",
+      },
+      {
+        id: 2,
+        restaurant: "Asian Fusion",
+        items: [
+          { name: "Rice", quantity: 20 },
+          { name: "Vegetables", quantity: 15 },
+          { name: "Spring Rolls", quantity: 30 },
+        ],
+        pickupTime: "2024-03-20 15:30",
+        status: "accepted",
+        restaurantName: "Asian Fusion",
+        contact: "Lucy Chen",
+        phone: "(555) 987-6543",
+        address: "456 Fusion Avenue, Townsville",
+        specialInstructions: "Food packaged in individual containers",
+      },
+      // More sample data from the dashboard
+      {
+        id: 3,
+        restaurant: "Mexican Grill",
+        items: [
+          { name: "Beans", quantity: 25 },
+          { name: "Rice", quantity: 25 },
+          { name: "Tortillas", quantity: 50 },
+          { name: "Salsa", quantity: 15 },
+        ],
+        pickupTime: "2024-03-20 16:00",
+        status: "pending",
+        restaurantName: "Mexican Grill",
+        contact: "Carlos Martinez",
+        phone: "(555) 789-0123",
+        address: "789 Taco Street, Metropolis",
+        specialInstructions: "Includes vegetarian options",
+      },
+      {
+        id: 4,
+        restaurant: "Fresh Bakery",
+        items: [
+          { name: "Bread", quantity: 20 },
+          { name: "Pastries", quantity: 15 },
+          { name: "Cakes", quantity: 5 },
+        ],
+        pickupTime: "2024-03-21 09:00",
+        status: "pending",
+        restaurantName: "Fresh Bakery",
+        contact: "Emma Thompson",
+        phone: "(555) 321-7890",
+        address: "321 Bakery Road, Villageton",
+        specialInstructions:
+          "Baked fresh this morning, best consumed within 2 days",
+      },
+      {
+        id: 5,
+        restaurant: "Seafood Harbor",
+        items: [
+          { name: "Fish", quantity: 18 },
+          { name: "Rice", quantity: 18 },
+          { name: "Mixed Vegetables", quantity: 18 },
+        ],
+        pickupTime: "2024-03-21 11:30",
+        status: "accepted",
+        restaurantName: "Seafood Harbor",
+        contact: "Robert Fisher",
+        phone: "(555) 654-3210",
+        address: "567 Harbor Drive, Coastville",
+        specialInstructions: "Seafood dishes, please refrigerate immediately",
+      },
+      {
+        id: 6,
+        restaurant: "Vegan Delight",
+        items: [
+          { name: "Salads", quantity: 10 },
+          { name: "Tofu", quantity: 12 },
+          { name: "Quinoa Bowls", quantity: 8 },
+        ],
+        pickupTime: "2024-03-21 13:00",
+        status: "completed",
+        restaurantName: "Vegan Delight",
+        contact: "Olivia Green",
+        phone: "(555) 234-5678",
+        address: "890 Plant Street, Greenfield",
+        specialInstructions: "All plant-based, allergen information included",
+      },
+      {
+        id: 7,
+        restaurant: "BBQ Smokehouse",
+        items: [
+          { name: "Smoked Meats", quantity: 20 },
+          { name: "Cornbread", quantity: 30 },
+          { name: "Beans", quantity: 25 },
+        ],
+        pickupTime: "2024-03-22 12:00",
+        status: "pending",
+        restaurantName: "BBQ Smokehouse",
+        contact: "Thomas Grill",
+        phone: "(555) 876-5432",
+        address: "432 Smoke Road, Grillville",
+        specialInstructions: "Heavy containers, please bring sturdy transport",
+      },
+      {
+        id: 8,
+        restaurant: "Restaurant Test",
+        items: [
+          { name: "Pizza", quantity: 10 },
+          { name: "Salad", quantity: 15 },
+          { name: "Garlic Bread", quantity: 20 },
+        ],
+        pickupTime: "2024-03-22 15:45",
+        status: "pending",
+        restaurantName: "Restaurant Test",
+        contact: "Restaurant Manager",
+        phone: "(555) 555-5555",
+        address: "456 Food Avenue, Metropolis",
+        specialInstructions: "This is a test donation",
+      },
+      {
+        id: 9,
+        restaurant: "Indian Spice",
+        items: [
+          { name: "Curry", quantity: 15 },
+          { name: "Rice", quantity: 15 },
+          { name: "Naan Bread", quantity: 28 },
+        ],
+        pickupTime: "2024-03-23 17:00",
+        status: "rejected",
+        restaurantName: "Indian Spice",
+        contact: "Raj Patel",
+        phone: "(555) 432-1098",
+        address: "765 Spice Lane, Flavortown",
+        specialInstructions: "Some dishes are spicy, labeled accordingly",
+      },
+      {
+        id: 10,
+        restaurant: "Greek Taverna",
+        items: [
+          { name: "Gyros", quantity: 15 },
+          { name: "Greek Salad", quantity: 15 },
+          { name: "Pita", quantity: 32 },
+        ],
+        pickupTime: "2024-03-23 18:30",
+        status: "accepted",
+        restaurantName: "Greek Taverna",
+        contact: "Nikos Papadopoulos",
+        phone: "(555) 210-9876",
+        address: "109 Mediterranean Blvd, Athens Place",
+        specialInstructions:
+          "Packed family-style, serves 4-6 people per container",
+      },
+    ];
 
-  displayDonationRequests();
+    // Save mock data to localStorage
+    localStorage.setItem("donationRequests", JSON.stringify(mockDonations));
+    donationRequests = mockDonations;
+  }
+
+  displayDonationRequests(donationRequests);
 }
 
-// Display donation requests
-function displayDonationRequests() {
+// Display all requests as cards
+function displayDonationRequests(donationRequests) {
   const requestsContainer = document.getElementById("donationRequests");
   if (!requestsContainer) return;
 
+  const requests =
+    donationRequests ||
+    JSON.parse(localStorage.getItem("donationRequests") || "[]");
+
+  // Filter by status
+  const activeStatusBtn = document.querySelector(".filter-btn.active");
+  const status = activeStatusBtn ? activeStatusBtn.dataset.status : "all";
+
+  let filtered = requests;
+  if (status !== "all") {
+    filtered = filtered.filter((r) => r.status === status);
+  }
+
+  // Filter by search
+  const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+  if (searchTerm) {
+    filtered = filtered.filter((r) => {
+      // Search in restaurant name
+      if (
+        r.restaurantName &&
+        r.restaurantName.toLowerCase().includes(searchTerm)
+      ) {
+        return true;
+      }
+
+      // Search in items
+      if (r.items) {
+        if (Array.isArray(r.items)) {
+          return r.items.some(
+            (item) => item.name && item.name.toLowerCase().includes(searchTerm)
+          );
+        } else if (typeof r.items === "string") {
+          return r.items.toLowerCase().includes(searchTerm);
+        }
+      }
+
+      // Search in contact name or address
+      if (
+        (r.contact && r.contact.toLowerCase().includes(searchTerm)) ||
+        (r.address && r.address.toLowerCase().includes(searchTerm))
+      ) {
+        return true;
+      }
+
+      return false;
+    });
+  }
+
+  // Clear container
   requestsContainer.innerHTML = "";
 
-  donationRequests.forEach((request) => {
-    const requestCard = document.createElement("div");
-    requestCard.className = "donation-request-card";
-    requestCard.innerHTML = `
-            <div class="request-header">
-                <h3>Donation from ${request.restaurantName}</h3>
-                <span class="status-badge ${request.status}">${
-      request.status
-    }</span>
-            </div>
-            <div class="request-details">
-                <p><i class="fas fa-clock"></i> Pickup Time: ${request.pickupTime.toLocaleString()}</p>
-                <p><i class="fas fa-box"></i> Items:</p>
-                <ul>
-                    ${request.items
-                      .map(
-                        (item) => `
-                        <li>${item.name} (${item.quantity})</li>
-                    `
-                      )
-                      .join("")}
-                </ul>
-                ${
-                  request.specialInstructions
-                    ? `
-                    <p><i class="fas fa-info-circle"></i> Special Instructions: ${request.specialInstructions}</p>
-                `
-                    : ""
-                }
-            </div>
-            <div class="request-actions">
-                ${
-                  request.status === "pending"
-                    ? `
-                    <button class="accept-btn" onclick="handleDonationRequest(${request.id}, 'accepted')">
-                        <i class="fas fa-check"></i> Accept
-                    </button>
-                    <button class="reject-btn" onclick="handleDonationRequest(${request.id}, 'rejected')">
-                        <i class="fas fa-times"></i> Reject
-                    </button>
-                `
-                    : ""
-                }
-            </div>
-        `;
-    requestsContainer.appendChild(requestCard);
+  // Show empty state if no results
+  if (filtered.length === 0) {
+    requestsContainer.innerHTML = `
+      <div class="empty-state">
+        <i class="fas fa-box-open"></i>
+        <p>No donation requests found.</p>
+      </div>
+    `;
+    return;
+  }
+
+  // Create a card for each donation request
+  filtered.forEach((request) => {
+    // Prepare items display
+    let itemsHtml = "";
+
+    if (Array.isArray(request.items)) {
+      itemsHtml = `
+        <ul class="items-list">
+          ${request.items
+            .map(
+              (item) => `
+            <li>
+              <span>${item.name}</span>
+              <span class="item-quantity">${item.quantity}</span>
+            </li>
+          `
+            )
+            .join("")}
+        </ul>
+      `;
+    } else if (typeof request.items === "string") {
+      const itemsArray = request.items.split(",").map((item) => item.trim());
+      itemsHtml = `
+        <ul class="items-list">
+          ${itemsArray
+            .map(
+              (item) => `
+            <li>
+              <span>${item}</span>
+            </li>
+          `
+            )
+            .join("")}
+        </ul>
+      `;
+    }
+
+    // Get status with first letter capitalized
+    const statusDisplay = capitalizeFirstLetter(request.status);
+
+    // Create the card HTML
+    const card = document.createElement("div");
+    card.className = "donation-request-card";
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="restaurant-name">
+          <i class="fas fa-utensils"></i>
+          ${
+            request.restaurantName || request.restaurant || "Unknown Restaurant"
+          }
+        </div>
+        <span class="status-badge ${request.status}">
+          ${getStatusIcon(request.status)} ${statusDisplay}
+        </span>
+      </div>
+      
+      <div class="card-body">
+        <div class="info-item">
+          <div class="info-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="info-content">
+            <div class="info-label">Pickup Time</div>
+            <div class="info-value">${formatDateTime(request.pickupTime)}</div>
+          </div>
+        </div>
+        
+        <div class="info-item">
+          <div class="info-icon">
+            <i class="fas fa-box"></i>
+          </div>
+          <div class="info-content">
+            <div class="info-label">Donation Items</div>
+            ${itemsHtml}
+          </div>
+        </div>
+        
+        <div class="info-item">
+          <div class="info-icon">
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="info-content">
+            <div class="info-label">Contact</div>
+            <div class="info-value">${request.contact || "Not provided"}</div>
+          </div>
+        </div>
+        
+        <div class="info-item">
+          <div class="info-icon">
+            <i class="fas fa-map-marker-alt"></i>
+          </div>
+          <div class="info-content">
+            <div class="info-label">Address</div>
+            <div class="info-value">${request.address || "Not provided"}</div>
+          </div>
+        </div>
+        
+        ${
+          request.specialInstructions
+            ? `
+        <div class="info-item">
+          <div class="info-icon">
+            <i class="fas fa-info-circle"></i>
+          </div>
+          <div class="info-content">
+            <div class="info-label">Special Instructions</div>
+            <div class="info-value">${request.specialInstructions}</div>
+          </div>
+        </div>
+        `
+            : ""
+        }
+      </div>
+      
+      <div class="card-footer">
+        ${
+          request.status === "pending"
+            ? `
+          <button class="action-btn accept-btn" onclick="handleDonationRequest(${request.id}, 'accepted')">
+            <i class="fas fa-check"></i> Accept
+          </button>
+          <button class="action-btn reject-btn" onclick="handleDonationRequest(${request.id}, 'rejected')">
+            <i class="fas fa-times"></i> Reject
+          </button>
+        `
+            : ""
+        }
+        
+        ${
+          request.status === "accepted"
+            ? `
+          <button class="action-btn complete-btn" onclick="handleDonationRequest(${request.id}, 'completed')">
+            <i class="fas fa-check-double"></i> Mark Completed
+          </button>
+        `
+            : ""
+        }
+      </div>
+    `;
+
+    requestsContainer.appendChild(card);
   });
 }
 
-// Handle donation request (accept/reject)
-function handleDonationRequest(requestId, action) {
-  const request = donationRequests.find((r) => r.id === requestId);
-  if (!request) return;
+// Format date and time
+function formatDateTime(dateTimeStr) {
+  if (!dateTimeStr) return "Not specified";
 
-  // Show loading animation
-  const loadingOverlay = document.createElement("div");
-  loadingOverlay.className = "loading-overlay";
-  loadingOverlay.innerHTML = `
-        <div class="loading-content">
-            <div class="loading-spinner"></div>
-            <h3>Processing Request</h3>
-            <p>Please wait...</p>
-        </div>
-    `;
-  document.body.appendChild(loadingOverlay);
+  const date = new Date(dateTimeStr);
+  if (isNaN(date.getTime())) return dateTimeStr; // Return as is if invalid date
 
-  // Simulate API call
-  setTimeout(() => {
-    loadingOverlay.remove();
+  return date.toLocaleString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
 
-    // Update request status
-    request.status = action;
+// Get status icon
+function getStatusIcon(status) {
+  switch (status) {
+    case "pending":
+      return '<i class="fas fa-clock"></i>';
+    case "accepted":
+      return '<i class="fas fa-check-circle"></i>';
+    case "rejected":
+      return '<i class="fas fa-times-circle"></i>';
+    case "completed":
+      return '<i class="fas fa-check-double"></i>';
+    default:
+      return '<i class="fas fa-question-circle"></i>';
+  }
+}
 
-    // Show confirmation modal
-    const confirmationModal = document.createElement("div");
-    confirmationModal.className = "confirmation-modal";
-    confirmationModal.innerHTML = `
-            <div class="modal-content">
-                <h2>Request ${
-                  action === "accepted" ? "Accepted" : "Rejected"
-                }</h2>
-                <p>The donation request has been ${action}.</p>
-                ${
-                  action === "accepted"
-                    ? `
-                    <p>Estimated Pickup Time: ${request.pickupTime.toLocaleString()}</p>
-                    <p>Please ensure you have the necessary resources to handle this donation.</p>
-                `
-                    : ""
-                }
-                <button class="close-btn" onclick="this.parentElement.parentElement.remove()">Close</button>
-            </div>
-        `;
-    document.body.appendChild(confirmationModal);
-
-    // Refresh the display
-    displayDonationRequests();
-  }, 1500);
+// Capitalize first letter of a string
+function capitalizeFirstLetter(string) {
+  if (!string) return "";
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 // Add styles

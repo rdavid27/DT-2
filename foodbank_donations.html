@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Donation Requests - Food Bank Dashboard</title>
+    <title>Donation Requests - Food Bank Portal</title>
     <link rel="stylesheet" href="styles.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
@@ -11,113 +11,639 @@
     />
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    <style>
+      :root {
+        --primary-color: #4361ee;
+        --primary-light: #4895ef;
+        --secondary-color: #3f37c9;
+        --accent-color: #4cc9f0;
+        --success-color: #10b981;
+        --warning-color: #f59e0b;
+        --danger-color: #ef4444;
+        --info-color: #3b82f6;
+        --text-primary: #f8fafc;
+        --text-secondary: #cbd5e1;
+        --text-muted: #94a3b8;
+        --bg-gradient-start: #111827;
+        --bg-gradient-end: #1e293b;
+        --card-bg: #1e293b;
+        --card-bg-darker: #0f172a;
+        --border-color: #334155;
+        --input-bg: #1e293b;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+
+      body {
+        background: linear-gradient(
+          135deg,
+          var(--bg-gradient-start),
+          var(--bg-gradient-end)
+        );
+        color: var(--text-primary);
+        font-family: "Inter", sans-serif;
+        margin: 0;
+        line-height: 1.6;
+        min-height: 100vh;
+      }
+
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(30, 41, 59, 0.9);
+        backdrop-filter: blur(10px);
+        padding: 1rem 2rem;
+        box-shadow: var(--shadow);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+
+      .nav-brand {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+      }
+
+      .nav-links a,
+      .nav-links button {
+        color: var(--text-primary);
+        text-decoration: none;
+        background: none;
+        border: none;
+        font-size: 0.95rem;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s;
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+      }
+
+      .nav-links a.active {
+        background: rgba(67, 97, 238, 0.15);
+        color: var(--primary-color);
+      }
+
+      .nav-links a:hover,
+      .nav-links button:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--accent-color);
+      }
+
+      main {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .hero {
+        margin-bottom: 2rem;
+        padding: 2rem;
+        background: var(--card-bg);
+        border-radius: 12px;
+        box-shadow: var(--shadow-md);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          135deg,
+          rgba(67, 97, 238, 0.1),
+          transparent
+        );
+        z-index: 0;
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero h1 {
+        font-size: 1.75rem;
+        margin: 0 0 0.5rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .hero h1 i {
+        color: var(--primary-color);
+      }
+
+      .hero p {
+        margin: 0;
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+      }
+
+      .donations-container {
+        background: var(--card-bg);
+        border-radius: 12px;
+        box-shadow: var(--shadow-md);
+        overflow: hidden;
+      }
+
+      .container-header {
+        background: rgba(67, 97, 238, 0.15);
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .container-header h2 {
+        margin: 0;
+        font-size: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .container-header h2 i {
+        color: var(--primary-color);
+      }
+
+      .container-content {
+        padding: 1.5rem;
+      }
+
+      .filters {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 1.5rem;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+
+      @media (max-width: 768px) {
+        .filters {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .search-container {
+        position: relative;
+      }
+
+      .search-container i {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 2.5rem;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        background: var(--input-bg);
+        color: var(--text-primary);
+        font-size: 0.95rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.25);
+      }
+
+      .filter-controls {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+
+      .filter-btn {
+        padding: 0.6rem 1rem;
+        border-radius: 8px;
+        border: none;
+        background: var(--card-bg-darker);
+        color: var(--text-secondary);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+
+      .filter-btn.active {
+        background: rgba(67, 97, 238, 0.15);
+        color: var(--primary-color);
+      }
+
+      .filter-btn:hover {
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .donation-requests {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 1.5rem;
+      }
+
+      @media (max-width: 400px) {
+        .donation-requests {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .donation-request-card {
+        background: var(--card-bg-darker);
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+
+      .donation-request-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-md);
+      }
+
+      .card-header {
+        padding: 1.25rem 1.5rem;
+        background: rgba(15, 23, 42, 0.5);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .restaurant-name {
+        font-weight: 600;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .restaurant-name i {
+        color: var(--primary-color);
+      }
+
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.35rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        gap: 0.4rem;
+      }
+
+      .status-badge.pending {
+        background: rgba(245, 158, 11, 0.15);
+        color: #fbbf24;
+      }
+
+      .status-badge.accepted {
+        background: rgba(16, 185, 129, 0.15);
+        color: #34d399;
+      }
+
+      .status-badge.rejected {
+        background: rgba(239, 68, 68, 0.15);
+        color: #f87171;
+      }
+
+      .status-badge.completed {
+        background: rgba(59, 130, 246, 0.15);
+        color: #60a5fa;
+      }
+
+      .card-body {
+        padding: 1.25rem 1.5rem;
+      }
+
+      .info-item {
+        margin-bottom: 1rem;
+        display: flex;
+        gap: 0.75rem;
+      }
+
+      .info-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: rgba(67, 97, 238, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .info-icon i {
+        color: var(--primary-color);
+        font-size: 0.9rem;
+      }
+
+      .info-content {
+        flex: 1;
+      }
+
+      .info-label {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-bottom: 0.2rem;
+      }
+
+      .info-value {
+        font-weight: 500;
+      }
+
+      .items-list {
+        list-style: none;
+        padding: 0;
+        margin: 0.25rem 0 0 0;
+      }
+
+      .items-list li {
+        padding: 0.5rem;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.03);
+        margin-bottom: 0.35rem;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .items-list li:last-child {
+        margin-bottom: 0;
+      }
+
+      .item-quantity {
+        color: var(--text-secondary);
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      .card-footer {
+        padding: 1.25rem 1.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        display: flex;
+        gap: 0.75rem;
+      }
+
+      .action-btn {
+        background: none;
+        border: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        padding: 0.6rem 1rem;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s;
+        flex: 1;
+        justify-content: center;
+      }
+
+      .accept-btn {
+        background: rgba(16, 185, 129, 0.15);
+        color: #34d399;
+      }
+
+      .accept-btn:hover {
+        background: rgba(16, 185, 129, 0.25);
+      }
+
+      .reject-btn {
+        background: rgba(239, 68, 68, 0.15);
+        color: #f87171;
+      }
+
+      .reject-btn:hover {
+        background: rgba(239, 68, 68, 0.25);
+      }
+
+      .complete-btn {
+        background: rgba(59, 130, 246, 0.15);
+        color: #60a5fa;
+      }
+
+      .complete-btn:hover {
+        background: rgba(59, 130, 246, 0.25);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: var(--text-muted);
+      }
+
+      .empty-state i {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+        display: block;
+      }
+
+      .empty-state p {
+        font-size: 1.1rem;
+        margin: 0;
+      }
+
+      @media (max-width: 768px) {
+        main {
+          padding: 1rem;
+        }
+        .container-content {
+          padding: 1rem;
+        }
+        .container-header {
+          padding: 1.25rem 1.5rem;
+        }
+      }
+
+      /* Modal styles from dashboard */
+      .loading-overlay,
+      .confirmation-modal {
+        display: none;
+        position: fixed;
+        z-index: 2000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(4px);
+        animation: fadeIn 0.3s;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .loading-content,
+      .modal-content {
+        background: var(--card-bg);
+        margin: 10% auto;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: var(--shadow-lg);
+        max-width: 500px;
+        width: 90%;
+        position: relative;
+        animation: slideIn 0.3s;
+        text-align: center;
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateY(-50px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid rgba(67, 97, 238, 0.15);
+        border-top: 5px solid var(--primary-color);
+        border-radius: 50%;
+        margin: 0 auto 1.5rem;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .close-btn {
+        margin-top: 1.5rem;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        background: var(--primary-color);
+        color: white;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s;
+      }
+
+      .close-btn:hover {
+        background: var(--primary-light);
+      }
+    </style>
   </head>
   <body>
     <nav class="navbar">
-      <div class="nav-brand">Food Bank Dashboard</div>
+      <div class="nav-brand">
+        <i class="fas fa-hand-holding-heart"></i> Food Bank Portal
+      </div>
       <div class="nav-links">
-        <a href="foodbank_dashboard.html">Dashboard</a>
-        <a href="foodbank_donations.html" class="active">Donations</a>
-        <a href="foodbank_profile.html">Profile</a>
-        <button class="logout-btn">Logout</button>
+        <a href="foodbank_dashboard.html"
+          ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+        >
+        <a href="foodbank_donations.html" class="active"
+          ><i class="fas fa-box"></i> Donations</a
+        >
+        <a href="foodbank_profile.html"
+          ><i class="fas fa-user-circle"></i> Profile</a
+        >
+        <button class="logout-btn" id="logoutBtn">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
       </div>
     </nav>
 
     <main>
       <section class="hero">
-        <h1>Donation Requests</h1>
-        <p>Manage incoming donation requests from local restaurants</p>
+        <div class="hero-content">
+          <h1><i class="fas fa-hand-holding-box"></i> Donation Requests</h1>
+          <p>
+            Manage incoming donation requests from restaurants and track their
+            status
+          </p>
+        </div>
       </section>
 
-      <div class="donations-container">
-        <div class="filters">
-          <div class="search-container">
-            <input
-              type="text"
-              id="searchInput"
-              placeholder="Search donations..."
-              class="search-input"
-            />
-          </div>
-          <div class="status-filters">
-            <button class="filter-btn active" data-status="all">All</button>
-            <button class="filter-btn" data-status="pending">Pending</button>
-            <button class="filter-btn" data-status="accepted">Accepted</button>
-            <button class="filter-btn" data-status="rejected">Rejected</button>
-          </div>
+      <section class="donations-container">
+        <div class="container-header">
+          <h2><i class="fas fa-box-open"></i> All Donation Requests</h2>
         </div>
+        <div class="container-content">
+          <div class="filters">
+            <div class="search-container">
+              <i class="fas fa-search"></i>
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Search for restaurant or food items..."
+                class="search-input"
+              />
+            </div>
+            <div class="filter-controls">
+              <button class="filter-btn active" data-status="all">
+                <i class="fas fa-th-list"></i> All
+              </button>
+              <button class="filter-btn" data-status="pending">
+                <i class="fas fa-clock"></i> Pending
+              </button>
+              <button class="filter-btn" data-status="accepted">
+                <i class="fas fa-check"></i> Accepted
+              </button>
+              <button class="filter-btn" data-status="rejected">
+                <i class="fas fa-times"></i> Rejected
+              </button>
+              <button class="filter-btn" data-status="completed">
+                <i class="fas fa-check-double"></i> Completed
+              </button>
+            </div>
+          </div>
 
-        <div id="donationRequests" class="donation-requests">
-          <!-- Donation requests will be dynamically populated here -->
+          <div id="donationRequests" class="donation-requests">
+            <!-- Donation requests will be dynamically populated here -->
+          </div>
         </div>
-      </div>
+      </section>
     </main>
 
-    <footer>
-      <div class="footer-content">
-        <div class="footer-section">
-          <h4>Quick Links</h4>
-          <a href="foodbank_dashboard.html">Dashboard</a>
-          <a href="foodbank_donations.html">Donations</a>
-          <a href="foodbank_profile.html">Profile</a>
-        </div>
-        <div class="footer-section">
-          <h4>Contact</h4>
-          <p>Email: support@foodbank.org</p>
-          <p>Phone: (555) 123-4567</p>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>&copy; 2024 Food Bank Management System. All rights reserved.</p>
-      </div>
-    </footer>
-
-    <script src="data.js"></script>
     <script src="foodbank_donations.js"></script>
-    <script>
-      // Handle logout
-      document.querySelector(".logout-btn").addEventListener("click", () => {
-        localStorage.removeItem("isFoodBankLoggedIn");
-        localStorage.removeItem("foodBankId");
-        window.location.href = "foodbank_login.html";
-      });
-
-      // Handle status filters
-      document.querySelectorAll(".filter-btn").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          // Update active button
-          document
-            .querySelectorAll(".filter-btn")
-            .forEach((b) => b.classList.remove("active"));
-          btn.classList.add("active");
-
-          // Filter donations
-          const status = btn.dataset.status;
-          const requests = document.querySelectorAll(".donation-request-card");
-          requests.forEach((request) => {
-            if (
-              status === "all" ||
-              request.querySelector(".status-badge").classList.contains(status)
-            ) {
-              request.style.display = "block";
-            } else {
-              request.style.display = "none";
-            }
-          });
-        });
-      });
-
-      // Handle search
-      document.getElementById("searchInput").addEventListener("input", (e) => {
-        const searchTerm = e.target.value.toLowerCase();
-        const requests = document.querySelectorAll(".donation-request-card");
-        requests.forEach((request) => {
-          const text = request.textContent.toLowerCase();
-          request.style.display = text.includes(searchTerm) ? "block" : "none";
-        });
-      });
-    </script>
   </body>
 </html>

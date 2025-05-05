@@ -61,6 +61,45 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeModal = document.querySelector('.close-modal');
     const cancelBtn = document.querySelector('.cancel-btn');
 
+    // Load profile info from localStorage or set defaults
+    const profile = JSON.parse(localStorage.getItem('foodBankProfile') || '{}');
+    document.getElementById('fbName').value = profile.name || '';
+    document.getElementById('fbAddress').value = profile.address || '';
+    document.getElementById('fbEmail').value = profile.email || '';
+    document.getElementById('fbPhone').value = profile.phone || '';
+    document.getElementById('fbHours').value = profile.hours || '';
+    document.getElementById('fbAccepts').value = profile.accepts || '';
+
+    // Save changes
+    document.getElementById('saveProfileBtn').onclick = () => {
+        const updatedProfile = {
+            name: document.getElementById('fbName').value,
+            address: document.getElementById('fbAddress').value,
+            email: document.getElementById('fbEmail').value,
+            phone: document.getElementById('fbPhone').value,
+            hours: document.getElementById('fbHours').value,
+            accepts: document.getElementById('fbAccepts').value,
+        };
+        localStorage.setItem('foodBankProfile', JSON.stringify(updatedProfile));
+        alert('Profile updated!');
+    };
+
+    // Load donation stats/history
+    const requests = JSON.parse(localStorage.getItem('donationRequests') || '[]')
+        .filter(r => r.foodbankId === (profile.id || 1));
+    document.getElementById('totalDonations').textContent = requests.length;
+    document.getElementById('totalItems').textContent = requests.reduce((sum, r) => sum + r.items.reduce((s, i) => s + i.quantity, 0), 0);
+
+    // Show donation history
+    const historyDiv = document.getElementById('donationHistory');
+    historyDiv.innerHTML = requests.map(r => `
+        <div class="history-card">
+            <strong>${r.restaurantName}</strong> - ${new Date(r.pickupTime).toLocaleString()}<br>
+            Items: ${r.items.map(i => `${i.name} (${i.quantity})`).join(', ')}<br>
+            Status: <span class="status-badge ${r.status}">${r.status}</span>
+        </div>
+    `).join('');
+
     // Update profile stats
     function updateProfileStats() {
         totalPartners.textContent = mockFoodBankProfile.stats.totalPartners;

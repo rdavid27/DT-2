@@ -1,98 +1,96 @@
-// Mock user credentials (in a real application, this would be handled server-side)
-const mockUsers = [
-    {
-        username: 'admin',
-        password: 'admin123'
-    },
-    {
-        username: 'manager',
-        password: 'manager123'
-    }
+// Mock restaurant credentials
+const mockRestaurants = [
+  {
+    username: "Restaurant Test",
+    password: "test",
+    name: "Restaurant Test",
+  },
 ];
 
-// DOM Elements
-const loginForm = document.getElementById('loginForm');
-const usernameInput = document.getElementById('username');
-const passwordInput = document.getElementById('password');
-const errorMessage = document.getElementById('errorMessage');
+document.addEventListener("DOMContentLoaded", () => {
+  const loginForm = document.getElementById("loginForm");
+  const usernameInput = document.getElementById("username");
+  const passwordInput = document.getElementById("password");
+  const errorMessage = document.getElementById("errorMessage");
 
-// Check if user is already logged in
-function checkAuthStatus() {
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    if (isLoggedIn) {
-        window.location.href = 'index.html';
-    }
-}
+  // Auto-fill demo account
+  usernameInput.value = "Restaurant Test";
+  passwordInput.value = "test";
 
-// Validate form inputs
-function validateForm() {
-    const username = usernameInput.value.trim();
-    const password = passwordInput.value.trim();
-
-    if (!username || !password) {
-        showError('Please fill in all fields');
-        return false;
-    }
-
-    return true;
-}
-
-// Show error message
-function showError(message) {
+  // Show error message
+  function showError(message) {
     errorMessage.textContent = message;
-    errorMessage.style.display = 'block';
-}
+    errorMessage.style.display = "block";
+  }
 
-// Clear error message
-function clearError() {
-    errorMessage.textContent = '';
-    errorMessage.style.display = 'none';
-}
+  // Clear error message
+  function clearError() {
+    errorMessage.textContent = "";
+    errorMessage.style.display = "none";
+  }
 
-// Handle login
-function handleLogin(e) {
+  // Handle login form submission
+  loginForm.addEventListener("submit", (e) => {
     e.preventDefault();
     clearError();
 
-    if (!validateForm()) {
-        return;
-    }
-
     const username = usernameInput.value.trim();
     const password = passwordInput.value.trim();
 
-    try {
-        // Get users from localStorage or use mock users as fallback
-        const users = JSON.parse(localStorage.getItem('users') || JSON.stringify(mockUsers));
-        
-        // Check credentials against stored users
-        const user = users.find(
-            user => user.username === username && user.password === password
-        );
-
-        if (user) {
-            // Store login state
-            localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('username', username);
-            localStorage.setItem('userRole', user.role || 'user');
-            
-            // Redirect to home page
-            window.location.href = 'index.html';
-        } else {
-            showError('Invalid username or password');
-        }
-    } catch (error) {
-        console.error('Login error:', error);
-        showError('An error occurred during login. Please try again.');
+    // Validate inputs
+    if (!username || !password) {
+      showError("Please fill in all fields");
+      return;
     }
-}
 
-// Event Listeners
-loginForm.addEventListener('submit', handleLogin);
+    // Check credentials
+    const restaurant = mockRestaurants.find(
+      (r) => r.username === username && r.password === password
+    );
 
-// Clear error message when user starts typing
-usernameInput.addEventListener('input', clearError);
-passwordInput.addEventListener('input', clearError);
+    if (restaurant) {
+      // Store login state
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("username", username);
+      localStorage.setItem("restaurantName", "Restaurant Test");
 
-// Check authentication status when page loads
-checkAuthStatus(); 
+      // Add some startup data for the demo
+      if (!localStorage.getItem("restaurantProfile")) {
+        const defaultProfile = {
+          name: "Restaurant Test",
+          address: "456 Food Avenue, Metropolis",
+          phone: "(555) 987-6543",
+          email: "info@restauranttest.com",
+          website: "www.restauranttest.com",
+          openingHours: "Tue-Sun: 11am-10pm",
+          cuisine: "International",
+          description:
+            "A modern restaurant specializing in sustainable food practices",
+        };
+        localStorage.setItem(
+          "restaurantProfile",
+          JSON.stringify(defaultProfile)
+        );
+      }
+
+      // Initialize notification count
+      if (!localStorage.getItem("notificationCount")) {
+        localStorage.setItem("notificationCount", "0");
+      }
+
+      // Redirect to restaurant dashboard
+      window.location.href = "foodbanks.html";
+    } else {
+      showError("Invalid username or password");
+    }
+  });
+
+  // Clear error when user starts typing
+  usernameInput.addEventListener("input", clearError);
+  passwordInput.addEventListener("input", clearError);
+
+  // Check if already logged in
+  if (localStorage.getItem("isLoggedIn") === "true") {
+    window.location.href = "foodbanks.html";
+  }
+});

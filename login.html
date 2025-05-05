@@ -1,65 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Restaurant Manager</title>
-    <link rel="stylesheet" href="login.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Restaurant Login</title>
+    <link rel="stylesheet" href="login.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
     <div class="login-container">
-        <section class="hero">
-            <h1>Welcome to Restaurant Manager</h1>
-            <p>Log in to manage your restaurant efficiently</p>
-        </section>
-
-        <section class="login-form-container">
-            <form id="loginForm" class="login-form">
-                <div class="form-header">
-                    <h2>Restaurant Login</h2>
-                </div>
-
-                <div class="form-group">
-                    <label for="username">
-                        <i class="fas fa-user"></i>
-                        Username
-                    </label>
-                    <input type="text" id="username" name="username" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="password">
-                        <i class="fas fa-lock"></i>
-                        Password
-                    </label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-
-                <div class="error-message" id="errorMessage"></div>
-
-                <button type="submit" class="login-btn">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Login
-                </button>
-
-                <div class="form-footer">
-                    <a href="#" class="forgot-password">Forgot Password?</a>
-                    <a href="register.html" class="register-link">Register Here</a>
-                </div>
-
-                <div class="alternate-login">
-                    <p>Are you a Food Bank?</p>
-                    <a href="foodbank_login.html" class="foodbank-login-link">
-                        <i class="fas fa-hand-holding-heart"></i>
-                        Food Bank Login
-                    </a>
-                </div>
-            </form>
-        </section>
+      <div class="hero">
+        <h1>Welcome to FoodConnect</h1>
+        <p>
+          Join our network and help reduce food waste while supporting those in
+          need. Your restaurant can make a difference!
+        </p>
+        <img
+          src="https://images.unsplash.com/photo-1505935428862-770b6f24f629?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=500"
+          alt="Food illustration"
+          style="
+            max-width: 100%;
+            margin-top: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+              0 10px 10px -5px rgba(0, 0, 0, 0.04);
+          "
+        />
+      </div>
+      <div class="login-form-container">
+        <div class="login-form">
+          <div class="form-header">
+            <h2>Restaurant Login</h2>
+            <p>Access your account to manage donations</p>
+          </div>
+          <div id="errorMessage" class="error-message"></div>
+          <form id="loginForm">
+            <div class="form-group">
+              <label for="username"><i class="fas fa-user"></i> Username</label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                placeholder="Enter your username"
+                value="Restaurant Test"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="password"><i class="fas fa-lock"></i> Password</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                value="test"
+                required
+              />
+            </div>
+            <button type="submit" class="login-btn">
+              <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+          </form>
+          <div class="form-footer">
+            <a href="#" class="forgot-password">Forgot Password?</a>
+            <a href="#" class="register">New? Register here</a>
+          </div>
+          <div class="alternate-login">
+            <p>Are you a food bank?</p>
+            <a href="foodbank_login.html" class="foodbank-login-link">
+              <i class="fas fa-utensils"></i> Food Bank Login
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script src="login.js"></script>
-</body>
-</html> 
+  </body>
+</html>
